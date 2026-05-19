@@ -56,6 +56,28 @@ Examples:
 
 Multi-word component names use hyphens (e.g. `input-otp`, `toggle-group`, `scroll-area`).
 
+### bits-ui docs
+
+bits-ui is the headless primitive library underlying shadcn-svelte. Fetch the LLM-friendly index at:
+
+```
+https://bits-ui.com/llms.txt
+```
+
+This lists all available component/utility docs. Each follows the pattern:
+
+```
+https://bits-ui.com/docs/components/<name>/llms.txt
+```
+
+Examples:
+
+- `https://bits-ui.com/docs/components/dialog/llms.txt`
+- `https://bits-ui.com/docs/components/select/llms.txt`
+- `https://bits-ui.com/docs/components/popover/llms.txt`
+
+Consult bits-ui docs when you need to understand available props, events, slots, or accessibility behavior for a primitive — especially when the React source wraps a Radix UI component.
+
 ## Conversion workflow
 
 ### Step 1: Analyze the React component
@@ -68,6 +90,8 @@ Read the entire source file. Identify:
 - **Tailwind classes**: all class strings in JSX (inline, `cn()` calls, `cva()` definitions)
 - **Compound structure**: does the file export multiple related sub-components?
 - **Event handlers**: `onClick`, `onChange`, `onFocus`, etc.
+- **Component type**: is this a UI primitive (`components/ui/`) or a business component (`components/`)?
+- **Data vs logic**: does the file contain large data objects that should be extracted into separate `.ts` files?
 
 ### Step 2: Look up both APIs
 
@@ -172,11 +196,25 @@ After mechanical conversion, apply the `svelte` and `svelte-shadcn-primitives` s
 | `input-otp` (React)            | `bits-ui` PIN Input                    |                                           |
 | `vaul` (React drawer)          | `bits-ui` Drawer or `vaul-svelte`      |                                           |
 
+## Output placement
+
+Preserve the source file's hierarchy level. Not every component is a UI primitive:
+
+- **Source in `components/ui/`** (shadcn primitives like Button, Dialog, Select) → output in `components/ui/<name>/`
+- **Source in `components/`** (business components like ModelCardDialog) → output in `components/<Name>.svelte` or `components/<Name>/` if compound
+- **Source utilities/hooks** → output in `utils/` or `stores/` as appropriate
+
+When the React source uses a shadcn `<Dialog>`, the Svelte output must use the bits-ui `Dialog` primitive — do not downgrade to a native `<dialog>` element.
+
+## Data extraction
+
+If the React source contains large data objects (lookup tables, static records, configuration maps) inline in the component file, extract them into a separate `.ts` file. Components should import data, not define it. This keeps the `.svelte` file focused on rendering.
+
 ## Compound component conversion
 
 React shadcn exports multiple sub-components from one file (e.g. Dialog exports Root, Trigger, Content, Header, Footer, Title, Description). In Svelte:
 
-1. Create a directory: `components/ui/<name>/`
+1. Create a directory at the **same hierarchy level as the source** (e.g. `components/ui/<name>/` for primitives, `components/<Name>/` for business components)
 2. Each sub-component becomes its own `.svelte` file
 3. Create `index.ts` re-exporting all parts
 4. Consumers import via namespace: `import * as Dialog from '$lib/components/ui/dialog/index.js'`
@@ -384,8 +422,13 @@ After conversion, verify:
 - [ ] No `cn()` calls — replaced with `cx()` or `mergeProps`
 - [ ] No `React.forwardRef` — replaced with `$props()` + spread
 - [ ] No `useState`/`useEffect`/`useMemo` — replaced with runes
-- [ ] `@component` documentation block present
+- [ ] `@component` documentation block present on every `.svelte` file
 - [ ] `Props` interface extends appropriate `HTMLAttributes<T>`
-- [ ] CSS uses design tokens (`--color-*`, `--space-*`, etc.)
+- [ ] CSS uses design tokens (`--color-*`, `--space-*`, etc.) — no raw `calc(0.25rem * N)` when a spacing token exists
 - [ ] Events use lowercase (`onclick` not `onClick`)
 - [ ] Compound components have `index.ts` re-export file
+- [ ] Output placement matches source hierarchy (`components/ui/` vs `components/`)
+- [ ] No `:global()` styles — use scoped classes instead
+- [ ] No large data objects inlined in the component — extract to separate `.ts` files
+- [ ] shadcn components (Dialog, Popover, etc.) use bits-ui primitives, not native HTML elements
+- [ ] All code is written in English, non-english text is preserved in the output, but all comments and documentation are in English for consistency
