@@ -18,14 +18,16 @@ Converts Tailwind v4 utility classes to vanilla CSS locally via `@tailwindcss/cl
 If the user has not explicitly provided an override file, check whether a `.tailwind-override.css` exists anywhere in the project by running the finder script with the file being converted as the starting point. It walks up the directory tree and returns the first match:
 
 ```bash
-node "${CLAUDE_SKILL_DIR}/../../scripts/tailwind-to-css/find-closest-override.mjs" /path/to/file/being/converted
+node "${CLAUDE_SKILL_DIR}/scripts/find-closest-override.mjs" /path/to/file/being/converted
 # prints the absolute path, or nothing if not found
 ```
 
 As a module:
 
 ```js
-import { findClosestOverride } from `${process.env.CLAUDE_SKILL_DIR}/../../scripts/tailwind-to-css/find-closest-override.mjs`;
+import {findClosestOverride} from
+
+`${process.env.CLAUDE_SKILL_DIR}/scripts/find-closest-override.mjs`;
 const overrideFile = findClosestOverride('/path/to/file/being/converted'); // string | null
 ```
 
@@ -48,9 +50,9 @@ Runs two Tailwind theme builds (once without, once with the override file) and d
 
 Two plugins run after all `var()` references are resolved:
 
-| Plugin | Transform |
-|---|---|
-| `spacing-tokens` | `calc(0.25rem * 4)` → `var(--space-4, calc(0.25rem * 4))` |
+| Plugin               | Transform                                                        |
+|----------------------|------------------------------------------------------------------|
+| `spacing-tokens`     | `calc(0.25rem * 4)` → `var(--space-4, calc(0.25rem * 4))`        |
 | `font-weight-tokens` | `font-weight: 700` → `font-weight: var(--font-weight-bold, 700)` |
 
 The passes are separate: if both ran together, `apply-var-map`'s fallback logic would strip the `var()` wrappers the second pass just added.
@@ -64,8 +66,8 @@ To redirect Tailwind tokens to project design tokens, provide a `.tailwind-overr
 
 :root {
     --color-blue-600: var(--color-primary-600);
-    --radius-lg:      var(--corner-lg);
-    --text-base:      var(--font-size-sm);
+    --radius-lg: var(--corner-lg);
+    --text-base: var(--font-size-sm);
 }
 ```
 
@@ -102,13 +104,13 @@ For full instructions on writing an override file (color families, typography sc
 
 ```bash
 # argument
-node "${CLAUDE_SKILL_DIR}/../../scripts/tailwind-to-css/convert.mjs" '[{"className":"card","classes":["p-6","bg-white"]}]'
+node "${CLAUDE_SKILL_DIR}/scripts/convert.mjs" '[{"className":"card","classes":["p-6","bg-white"]}]'
 
 # with token overrides
-node "${CLAUDE_SKILL_DIR}/../../scripts/tailwind-to-css/convert.mjs" '[...]' --override /path/to/overrides.css
+node "${CLAUDE_SKILL_DIR}/scripts/convert.mjs" '[...]' --override /path/to/overrides.css
 
 # stdin
-echo '[...]' | node "${CLAUDE_SKILL_DIR}/../../scripts/tailwind-to-css/convert.mjs"
+echo '[...]' | node "${CLAUDE_SKILL_DIR}/scripts/convert.mjs"
 ```
 
 Output is the raw CSS string written to stdout.
@@ -116,7 +118,9 @@ Output is the raw CSS string written to stdout.
 ## Module usage
 
 ```js
-import { tailwindToCss } from `${process.env.CLAUDE_SKILL_DIR}/../../scripts/tailwind-to-css/convert.mjs`;
+import {tailwindToCss} from
+
+`${process.env.CLAUDE_SKILL_DIR}/scripts/convert.mjs`;
 
 // without overrides
 const css = await tailwindToCss(classDefinitions);

@@ -16,6 +16,7 @@ You can install the skills by running:
 - [humanizer-de](skills/humanizer-de/SKILL.md) — Same as `humanizer`, but tuned for German text.
 - [phpunit](skills/phpunit/SKILL.md) — Comprehensive PHP testing with PHPUnit covering assertions, data providers, mocking, test doubles, database testing, and HTTP testing.
 - [skill-builder](skills/skill-builder/README.md) — Helps create or update a `SKILL.md` file based on an input document.
+- [react-tailwind-to-svelte](skills/react-tailwind-to-svelte/SKILL.md) — Convert React + Tailwind components to Svelte 5 + vanilla CSS. Covers JSX → Svelte syntax, Tailwind class extraction, and CSS structuring. Requires the `tailwind-to-css`, `svelte`, and `tailwind-to-css` skills.
 
 ### Frontend
 

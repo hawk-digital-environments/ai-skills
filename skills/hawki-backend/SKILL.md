@@ -1,6 +1,6 @@
 ---
 name: hawki-backend
-description: [ REQUIRES "laravel" skill! ] HAWKI coding standards and architecture patterns. Use when writing or reviewing PHP code for HAWKI, creating new classes/services, or when asked about project structure, DDD patterns, or code conventions.
+description: "[ REQUIRES 'laravel' skill! ] HAWKI coding standards and architecture patterns. Use when writing or reviewing PHP code for HAWKI, creating new classes/services, or when asked about project structure, DDD patterns, or code conventions."
 ---
 
 > ONLY CONTINUE IF THE `laravel` SKILL IS AVAILABLE.
@@ -78,8 +78,8 @@ $this->app->extend(AiService::class, fn($orig) => DecoratedAiService::createDeco
 
 Beyond what the `laravel` skill documents:
 
-| Need | How |
-|------|-----|
+| Need | How                                        |
+|------|--------------------------------------------|
 | Mail | `Illuminate\Contracts\Mail\Mailer $mailer` |
 
 ## Code Style
@@ -96,10 +96,12 @@ composer run php-cs-fixer  # locally
 HAWKI-specific conventions (PHPUnit itself is covered by the `phpunit` skill).
 
 **Namespaces** — mirror `app/` under `tests/`:
+
 - Unit: `Tests\Unit\{mirrored namespace}`
 - Feature: `Tests\Feature\{relevant sub-namespace}`
 
 **Test methods:**
+
 - Name: `testIt...` with `void` return — `testItConstructs`, `testItCanRetrieveXy`
 - Class under test: always named `$sut`
 - Always include `testItConstructs` when the class has constructor args

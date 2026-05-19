@@ -1,6 +1,6 @@
 ---
 name: hawki-frontend
-description: [ REQUIRES "svelte" skill! ] HAWKI frontend coding standards for Svelte 5 + TypeScript. Use when writing or reviewing frontend code for HAWKI, creating Svelte components, snippets, stores, or when asked about frontend architecture.
+description: "[ REQUIRES 'svelte' skill! ] HAWKI frontend coding standards for Svelte 5 + TypeScript. Use when writing or reviewing frontend code for HAWKI, creating Svelte components, snippets, stores, or when asked about frontend architecture."
 ---
 
 > ONLY CONTINUE IF THE `svelte` SKILL IS AVAILABLE.
@@ -107,14 +107,14 @@ Mirrors Laravel's `Translator::makeReplacements()`: supports `:placeholder`, `:P
 
 Token files live in `resources/css/tokens/`:
 
-| File              | Contents                                           |
-|-------------------|----------------------------------------------------|
-| `colors.css`      | OKLCH color scales + semantic aliases              |
-| `typography.css`  | font sizes, weights, line heights                  |
-| `spacing.css`     | `--space-1` (4px) → `--space-16` (64px)            |
-| `radius.css`      | `--corner-sm/md/lg/full`                           |
-| `shadows.css`     | `--elevation-none/1/2`                             |
-| `transitions.css` | `--duration-*` and `--easing-*`                    |
+| File              | Contents                                                                                                                                                        |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `colors.css`      | OKLCH color scales + semantic aliases                                                                                                                           |
+| `typography.css`  | font sizes, weights, line heights                                                                                                                               |
+| `spacing.css`     | `--space-1` (4px) → `--space-16` (64px)                                                                                                                         |
+| `radius.css`      | `--corner-sm/md/lg/full`                                                                                                                                        |
+| `shadows.css`     | `--elevation-none/1/2`                                                                                                                                          |
+| `transitions.css` | `--duration-*` and `--easing-*`                                                                                                                                 |
 | `breakpoints.css` | CSS Custom Media Queries — processed by `postcss-custom-media`, made globally available (including Svelte `<style>` blocks) via `@csstools/postcss-global-data` |
 
 **Legacy styles** in `public/css/` keep loading during the SPA transition — do not add new rules there.
@@ -133,12 +133,12 @@ Token files live in `resources/css/tokens/`:
 <Link href="/action" disabled>Disabled</Link>
 ```
 
-| Prop       | Type      | Default | Description                                                              |
-|------------|-----------|---------|--------------------------------------------------------------------------|
-| `href`     | `string`  | `''`    | Target; replaced with `javascript:void(0)` when empty or disabled.       |
-| `target`   | `string`  | `''`    | Standard anchor `target`.                                                |
-| `rel`      | `string`  | `''`    | Overrides auto `rel`. Defaults to `noopener noreferrer` on `_blank`.     |
-| `disabled` | `boolean` | `false` | Blocks navigation; adds `disabled` class.                                |
-| `children` | `Snippet` | —       | Link content.                                                            |
+| Prop       | Type      | Default | Description                                                          |
+|------------|-----------|---------|----------------------------------------------------------------------|
+| `href`     | `string`  | `''`    | Target; replaced with `javascript:void(0)` when empty or disabled.   |
+| `target`   | `string`  | `''`    | Standard anchor `target`.                                            |
+| `rel`      | `string`  | `''`    | Overrides auto `rel`. Defaults to `noopener noreferrer` on `_blank`. |
+| `disabled` | `boolean` | `false` | Blocks navigation; adds `disabled` class.                            |
+| `children` | `Snippet` | —       | Link content.                                                        |
 
 All `HTMLAnchorAttributes` forwarded via rest-props. `href`, `rel`, and `onclick` are computed with `$derived.by()` so they react to `disabled`/`target` changes. Empty attributes are omitted from the rendered `<a>` to keep HTML clean.
