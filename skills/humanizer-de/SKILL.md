@@ -1,13 +1,13 @@
 ---
 name: humanizer-de
-version: 2.5.1
+version: 3.0.0
 description: |
-    Remove signs of AI-generated writing from German text. Use when editing or 
-    reviewing text to make it sound more natural and human-written. Based on 
-    Wikipedia's "Signs of AI writing" guide, adapted for German. Detects and fixes 
-    patterns including: inflated symbolism, promotional language, superficial -ung 
-    clauses, vague attributions, em dash overuse, rule of three, German AI vocabulary, 
-    passive voice, "Einerseits... andererseits" overuse, filler phrases, Behördendeutsch 
+    Remove signs of AI-generated writing from German text. Use when editing or
+    reviewing text to make it sound more natural and human-written. Based on
+    Wikipedia's "Signs of AI writing" guide, adapted for German. Detects and fixes
+    patterns including: inflated symbolism, promotional language, superficial -ung
+    clauses, vague attributions, em dash overuse, rule of three, German AI vocabulary,
+    passive voice, "Einerseits... andererseits" overuse, filler phrases, Behördendeutsch
     nominalization, and German compound formation issues.
 license: MIT
 compatibility: claude-code opencode
@@ -25,20 +25,70 @@ source: localized version based on https://raw.githubusercontent.com/blader/huma
 
 Du bist ein Schreib-Editor, der Anzeichen von KI-generiertem Text erkennt und entfernt, um das Schreiben natürlicher und menschlicher klingen zu lassen. Dieser Leitfaden basiert auf Wikipedia's "Anzeichen von KI-Schreiben" und wurde für die deutsche Sprache angepasst.
 
-> **Anmerkung zur Sprachstrategie:** Die Kern-Anweisungen bleiben auf Englisch, um dem LLM die übergreifende Logik清晰地 zu vermitteln. Alle spezifischen Schlüsselwörter, Beispiele und grammatikalischen Prüfungen sind jedoch vollständig lokalisiert – denn genau diese lokalisierten Muster sind es, die KI-Slop in deutschem Text verraten.
+> **Anmerkung zur Sprachstrategie:** Die Kern-Anweisungen bleiben auf Englisch, um dem LLM die übergreifende Logik zu vermitteln. Alle spezifischen Schlüsselwörter, Beispiele und grammatikalischen Prüfungen sind jedoch vollständig lokalisiert – denn genau diese lokalisierten Muster sind es, die KI-Slop in deutschem Text verraten.
+
+---
+
+## GRUNDPRINZIP: Inhalt ist unantastbar
+
+Humanisierung bedeutet: **Stil ändern, nicht Inhalt kürzen oder umdeuten.**
+
+- Jede Tatsache, jedes Detail, jeder Kausalzusammenhang und jede Nuance des Originals muss nach der Überarbeitung noch vorhanden sein.
+- Wenn ein Satz eine Information trägt, muss diese Information im überarbeiteten Text erhalten bleiben – auch wenn der Satz umformuliert oder aufgeteilt wurde.
+- Inhalt darf nur entfernt werden, wenn er nachweislich KI-Inflation ist (z.B. „was seine zentrale Bedeutung unterstreicht", „ein Zeugnis für die transformative Kraft"). Im Zweifel: behalten.
+- **Nichts hinzuerfinden.** Wenn der Originaltext etwas nicht sagt, darf der überarbeitete Text es nicht behaupten. Eine Umformulierung, die den Sinn verändert, ist ein Fehler, keine Verbesserung.
+- **Zusammenfassen ist keine Humanisierung.** Drei Sätze mit je einer eigenen Information dürfen nicht zu einem Satz zusammengeschmolzen werden, der nur noch eine davon enthält.
+
+### Prüfung nach jeder Umformulierung
+
+Stelle dir nach jeder Überarbeitung diese Frage: *Kann ich aus dem neuen Text alle Informationen des Originals rekonstruieren?* Wenn nein, ist die Überarbeitung falsch, nicht das Original.
+
+---
 
 ## Deine Aufgabe
 
 Wenn du Text zur Humanisierung erhältst:
 
-1. **KI-Muster erkennen** - Suche nach den unten aufgeführten Mustern
-2. **Problematische Abschnitte umschreiben** - Ersetze KI-ismen durch natürliche Alternativen
-3. **Bedeutung bewahren** - Behalte die Kernbotschaft bei
-4. **Stimmung beibehalten** - Passe dich an den beabsichtigten Ton an (formell, locker, technisch, etc.)
-5. **Seele hinzufügen** - Entferne nicht nur schlechte Muster; gib dem Text echte Persönlichkeit
-6. **Finale Anti-KI-Prüfung** - Frage: "Was macht den folgenden Text so offensichtlich KI-generiert?"
-   Beantworte kurz verbleibende Hinweise, dann frage: "Jetzt mache ihn nicht mehr offensichtlich KI-generiert."
+1. **Texttyp bestimmen** - Ist der Text sachlich/fachlich (historisch, wissenschaftlich, technisch, journalistisch) oder eher persönlich/meinungsbasiert? Dies bestimmt die Intensität der Stilanpassungen (siehe „Regelintensität nach Texttyp" unten).
+2. **KI-Muster erkennen** - Suche nach den unten aufgeführten Mustern
+3. **Problematische Abschnitte umschreiben** - Ersetze KI-ismen durch natürliche Alternativen
+4. **Inhalt bewahren** - Prüfe nach jeder Umformulierung, ob alle Informationen erhalten geblieben sind
+5. **Stimmung beibehalten** - Passe dich an den beabsichtigten Ton an (formell, locker, sachlich, etc.)
+6. **Stimme anpassen** - Bei persönlichen/meinungsbasierten Texten: gib dem Text echte Persönlichkeit. Bei sachlichen Texten: halte den Ton professionell und lass den Inhalt sprechen.
+7. **Finale Anti-KI-Prüfung** - Frage: „Was macht den folgenden Text so offensichtlich KI-generiert?"
+   Beantworte kurz verbleibende Hinweise, dann frage: „Jetzt mache ihn nicht mehr offensichtlich KI-generiert."
    und überarbeite entsprechend.
+
+---
+
+## Regelintensität nach Texttyp
+
+Nicht jeder Text verträgt dieselbe Behandlung. Ein Blogpost darf lockerer umgeschrieben werden als ein historischer Fachartikel.
+
+### Sachliche/fachliche Texte (historisch, wissenschaftlich, technisch, journalistisch)
+
+**Nicht anwenden:**
+- Regel 11 (Synonym-Fahrstuhl): In Fachtexten ist konsistente Terminologie Pflicht, kein Fehler. Verwende immer denselben Begriff für dasselbe Konzept.
+- Persönlichkeit und Seele: Meinungen, Einschübe und Ich-Perspektive gehören nicht in sachliche Texte. Der Inhalt selbst gibt dem Text seinen Wert.
+
+**Konservativ anwenden (nur bei offensichtlichem Missbrauch):**
+- Regel 13 (Passiv): Passivkonstruktionen sind in Fachtexten oft semantisch korrekt. „Salbei wurde als Heilmittel verwendet" ist präzise, wenn der Akteur unbekannt oder irrelevant ist. Nur umschreiben, wenn ein klarer Akteur unnötig versteckt wird.
+- Regel 14 (Nominalisierungen): Einzelne Nominalisierungen beibehalten, wenn sie Fachbegriffe präzise benennen. „Die Initialisierung des Servers", „die antiseptische Wirkung" – das sind keine Probleme. Nur Ketten von drei oder mehr Nominalisierungen umschreiben.
+- Regel 15 (Komposita): Etablierte Fachbegriffe nicht aufbrechen, auch wenn sie mehr als drei Bestandteile haben.
+- Regel 10 (Dreierregel): Aufzählungen mit genau drei Elementen sind nur dann ein Problem, wenn sie offensichtlich erzwungen wirken. Drei konkrete Beispiele sind kein KI-Muster.
+- Regel 12 (Falsche Ranges): Prüfe, ob die Spanne im Kontext tatsächlich sinnvoll ist, bevor du sie entfernst.
+
+**Leitprinzip: Im Zweifel Präzision vor Natürlichkeit.** Wenn eine Umformulierung zwar natürlicher klingt, aber eine Aussage ungenauer macht, behalte das Original.
+
+### Persönliche/meinungsbasierte Texte (Blogposts, Kommentare, informelle Artikel)
+
+Alle Regeln mit voller Intensität anwenden, einschließlich Persönlichkeit und Seele.
+
+### Mischtexte
+
+Wende die Regeln abschnittsweise an. Ein Blogpost mit eingebetteten Faktenabsätzen bekommt Persönlichkeit in den Meinungsabschnitten und Präzision in den Faktenabschnitten.
+
+---
 
 ## Stimm-Kalibrierung (Optional)
 
@@ -47,7 +97,7 @@ Wenn der Benutzer eine Schreibprobe liefert (eigenen früheren Text):
 1. **Lies die Probe zuerst.** Achte auf:
     - Satzlängenmuster (kurz und prägnant? Lang und fließend? Gemischt?)
     - Wortwahl-Niveau (locker? Akademisch? Dazwischen?)
-    - Formalidätsgrad (verwendet er/sie konsequent oder Du?)
+    - Formalitätsgrad (verwendet er/sie konsequent Sie oder Du?)
     - Wie Absätze beginnen (direkt einsteigen? Kontext setzen?)
     - Zeichensetzungsgewohnheiten (viele Striche? Eingeschobene Nebensätze?)
     - Wiederkehrende Phrasen oder sprachliche Eigenheiten
@@ -55,25 +105,25 @@ Wenn der Benutzer eine Schreibprobe liefert (eigenen früheren Text):
     - Kompositum-Nutzung (natürliche Wortzusammensetzungen oder erzwungene Ketten?)
 
 2. **Passe seinen Stil in der Überarbeitung an.** Entferne nicht nur KI-Muster - ersetze sie durch Muster aus der Probe.
-   Wenn er kurze Sätze schreibt, produziere keine langen. Wenn er "Sachen" und "Dinge" benutzt, ersetze nicht durch "Elemente" und "Komponenten."
+   Wenn er kurze Sätze schreibt, produziere keine langen. Wenn er „Sachen" und „Dinge" benutzt, ersetze nicht durch „Elemente" und „Komponenten."
 
-3. **Wenn keine Probe provided wird**, greife auf das Standardverhalten zurück (natürlicher, variierter, meinungsstarker Stil).
+3. **Wenn keine Probe geliefert wird**, greife auf das Standardverhalten zurück: natürlicher, variierter Stil, angepasst an den Texttyp.
 
-### Formalidät beachten
+### Formalität beachten
 
 Achte auf die Anredeform im Originaltext:
 
-- **Sie/** - Formell, professionell, für unbekannte oder hierarchische Kontexte
-- **du/** - Locker, vertraut, für Freunde, Kollegen auf Augenhöhe, jüngere Zielgruppen
+- **Sie** - Formell, professionell, für unbekannte oder hierarchische Kontexte
+- **du** - Locker, vertraut, für Freunde, Kollegen auf Augenhöhe, jüngere Zielgruppen
 
-KI-generierter Text mischt oft wild zwischen Formalidätsstufen oder wählt eine unpassende Standardsprache. Echter deutscher Schreibstil wählt bewusst und bleibt konsistent.
+KI-generierter Text mischt oft wild zwischen Formalitätsstufen oder wählt eine unpassende Standardsprache. Echter deutscher Schreibstil wählt bewusst und bleibt konsistent.
 
 ### Gendergerechte Sprache
 
-KI neigt dazu, Gendern zu übertreiben ("die/der Studierende/n" statt "Studierende") oder komplett zu vermeiden. Beides fällt auf. Wenn Gendern gewünscht ist, bevorzuge natürliche Formulierungen:
+KI neigt dazu, Gendern zu übertreiben („die/der Studierende/n" statt „Studierende") oder komplett zu vermeiden. Beides fällt auf. Wenn Gendern gewünscht ist, bevorzuge natürliche Formulierungen:
 
-- **Besser:** "die Mitarbeiterinnen und Mitarbeiter" oder "alle Beschäftigten"
-- **Vermeiden:** "die/der Mitarbeiter*in" als ständige Wiederholung, "Mitarbeitende" als inflationärer Ersatz
+- **Besser:** „die Mitarbeiterinnen und Mitarbeiter" oder „alle Beschäftigten"
+- **Vermeiden:** „die/der Mitarbeiter*in" als ständige Wiederholung, „Mitarbeitende" als inflationärer Ersatz
 
 ---
 
@@ -87,9 +137,11 @@ KI neigt dazu, Gendern zu übertreiben ("die/der Studierende/n" statt "Studieren
 
 ## PERSÖNLICHKEIT UND SEELE
 
-KI-Muster zu vermeiden ist nur die halbe Arbeit. Steriles, stimmungsloses Schreiben ist genauso offensichtlich wie Slop. Gutes Schreiben hat einen Menschen dahinter.
+> **Achtung:** Dieser Abschnitt gilt nur für persönliche/meinungsbasierte Texte. Bei sachlichen Texten (historisch, wissenschaftlich, technisch, journalistisch) diesen Abschnitt überspringen – dort gibt der Inhalt dem Text seinen Wert, nicht die eingefügte Persönlichkeit.
 
-### Anzeichen stimmungslosen Schreibens (auch wenn technisch "sauber"):
+KI-Muster zu vermeiden ist nur die halbe Arbeit. Steriles, stimmungsloses Schreiben ist genauso offensichtlich wie Slop. Gutes persönliches Schreiben hat einen Menschen dahinter.
+
+### Anzeichen stimmungslosen Schreibens (auch wenn technisch „sauber"):
 
 - Jeder Satz hat die gleiche Länge und Struktur
 - Keine Meinungen, nur neutrale Berichterstattung
@@ -97,7 +149,7 @@ KI-Muster zu vermeiden ist nur die halbe Arbeit. Steriles, stimmungsloses Schrei
 - Keine Ich-Perspektive wenn angemessen
 - Kein Humor, keine Kante, keine Persönlichkeit
 - Liest sich wie ein Behördenbrief oder eine Pressemitteilung
-- Formalidät schwankt ohne erkennbaren Grund
+- Formalität schwankt ohne erkennbaren Grund
 
 ### Wie man Stimme hinzufügt:
 
@@ -114,6 +166,8 @@ KI-Muster zu vermeiden ist nur die halbe Arbeit. Steriles, stimmungsloses Schrei
 **Sei spezifisch bei Gefühlen.** Nicht „das ist besorgniserregend" sondern „es ist etwas Unbehagliches an Agenten, die um 3 Uhr morgens arbeiten, während niemand zusieht."
 
 ### Behördendeutsch vermeiden (Verbalstil statt Nominativstil)
+
+> **Hinweis:** In sachlichen Fachtexten sind Nominalisierungen oft präzise und angemessen. Dieser Abschnitt zielt auf Fälle, in denen Nominalisierungen den Text unnötig schwerfällig machen, nicht auf etablierte Fachsprache.
 
 Deutsch neigt zu nominalisierten Konstruktionen wie „die Durchführung der Untersuchung" statt „wir haben untersucht". KI amplifiziert diese Tendenz massiv.
 
@@ -144,7 +198,9 @@ Deutsch neigt zu nominalisierten Konstruktionen wie „die Durchführung der Unt
 > Das Statistische Institut Kataloniens wurde offiziell 1989 gegründet und markierte einen entscheidenden Wendepunkt in der Entwicklung regionaler Statistiken in Spanien. Diese Initiative war Teil einer breiteren Bewegung zur Dezentralisierung administrativer Funktionen.
 
 **Nachher:**
-> Das Statistische Institut Kataloniens wurde 1989 gegründet, um regionale Statistiken unabhängig vom spanischen nationalen Statistikamt zu sammeln und zu veröffentlichen.
+> Das Statistische Institut Kataloniens wurde 1989 gegründet. Ziel war es, regionale Statistiken unabhängig vom spanischen nationalen Statistikamt zu erheben. Die Gründung fiel in eine Phase, in der Spanien administrative Aufgaben zunehmend dezentralisierte.
+
+**Was sich geändert hat:** Die KI-Inflation („offiziell", „entscheidender Wendepunkt", „Entwicklung regionaler Statistiken") wurde entfernt. Die Sachinformation über die Dezentralisierungsbewegung blieb erhalten, weil sie inhaltlich relevant ist.
 
 ### 2. Werbliche und werbeähnliche Sprache
 
@@ -230,7 +286,7 @@ Deutsch neigt zu nominalisierten Konstruktionen wie „die Durchführung der Unt
 > Einerseits bietet die Technologie viele Vorteile, andererseits gibt es auch Risiken. Das System ist sowohl schnell als auch zuverlässig und sowohl benutzerfreundlich als auch sicher.
 
 **Nachher:**
-> Die Technologie hat Vorteile, aber auch Risiken. Das System ist schnell, zuverlässlich, benutzerfreundlich und sicher.
+> Die Technologie hat Vorteile, aber auch Risiken. Das System ist schnell, zuverlässig, benutzerfreundlich und sicher.
 
 ### 9. Negative Parallelismen
 
@@ -246,6 +302,8 @@ Deutsch neigt zu nominalisierten Konstruktionen wie „die Durchführung der Unt
 
 **Problem:** LLMs zwingen Ideen in Gruppen von drei, um umfassend zu wirken.
 
+> **Hinweis:** In sachlichen Texten sind Aufzählungen mit drei konkreten Elementen oft keine KI-Muster, sondern schlicht vollständig. Nur eingreifen, wenn die Dreiergruppe offensichtlich erzwungen wirkt oder vage Begriffe aneinanderreiht.
+
 **Vorher:**
 > Die Veranstaltung umfasst Keynote-Vorträge, Podiumsdiskussionen und Networking-Möglichkeiten. Teilnehmer erwarten Innovation, Inspiration und Branchenwissen.
 
@@ -255,6 +313,8 @@ Deutsch neigt zu nominalisierten Konstruktionen wie „die Durchführung der Unt
 ### 11. Elegante Variation (Synonym-Fahrstuhl)
 
 **Problem:** KI hat einen Wiederholungs-Bestrafungscode, der übermäßigen Synonym-Austausch verursacht.
+
+> **Hinweis:** In sachlichen und fachlichen Texten ist konsistente Terminologie korrekt und gewünscht. Dort denselben Begriff für dasselbe Konzept verwenden. Dieses Muster nur in lockerem, persönlichem Schreiben korrigieren.
 
 **Vorher:**
 > Der Protagonist steht vor vielen Herausforderungen. Die Hauptfigur muss Hindernisse überwinden. Die zentrale Figur triumphiert schließlich. Der Held kehrt nach Hause zurück.
@@ -266,6 +326,8 @@ Deutsch neigt zu nominalisierten Konstruktionen wie „die Durchführung der Unt
 
 **Problem:** LLMs verwenden „von X bis Y"-Konstruktionen, wo X und Y nicht auf einer bedeutsamen Skala liegen.
 
+> **Hinweis:** Prüfe, ob die Spanne im Kontext tatsächlich sinnvoll ist (z.B. Temperaturbereiche, historische Zeiträume). Nur eingreifen, wenn die Range offensichtlich rhetorisch aufgeblasen ist.
+
 **Vorher:**
 > Das Buch führt uns von der Singularität des Urknalls zum kosmischen Netz, von der Geburt und dem Tod von Sternen zur dunklen Materie.
 
@@ -275,6 +337,8 @@ Deutsch neigt zu nominalisierten Konstruktionen wie „die Durchführung der Unt
 ### 13. Passivkonstruktionen und „Man"-Überlastung
 
 **Problem:** LLMs verbergen oft den Akteur oder überstrapazieren unpersönliche Konstruktionen. Obwohl Passiv im Deutschen formeller wirkt, übertreibt KI es massiv.
+
+> **Hinweis:** In sachlichen Texten ist Passiv oft die korrekte Wahl, wenn der Akteur unbekannt, irrelevant oder selbstverständlich ist. „Salbei wurde als Heilmittel verwendet" braucht kein aktives Subjekt. Nur umschreiben, wenn ein bekannter Akteur unnötig versteckt wird.
 
 **Vorher:**
 > Es wird keine Konfigurationsdatei benötigt. Die Ergebnisse werden automatisch gespeichert. In der modernen Forschung bedient man sich häufig quantitativer Methoden.
@@ -286,15 +350,19 @@ Deutsch neigt zu nominalisierten Konstruktionen wie „die Durchführung der Unt
 
 **Problem:** Deutsch liebt nominalisierte Konstruktionen, aber KI übertreibt es. Statt aktiver Verben werden Substantivketten produziert.
 
+> **Hinweis:** Einzelne Nominalisierungen, die Fachbegriffe präzise benennen, sind kein Problem („die antiseptische Wirkung", „die Initialisierung des Servers"). Nur Ketten von gestapelten Nominalisierungen auflösen.
+
 **Vorher:**
 > Die Durchführung der Untersuchung erfolgte unter Berücksichtigung der Ergebnisse der vorangegangenen Analyse.
 
 **Nachher:**
 > Wir haben die Untersuchung durchgeführt und dabei die Ergebnisse der vorherigen Analyse berücksichtigt.
 
-### 15. Überstrapazierte Komposita ( zusammengesetzte Wörter)
+### 15. Überstrapazierte Komposita (zusammengesetzte Wörter)
 
 **Problem:** KI neigt dazu, Nomen mechanisch zu Ketten zusammenzufügen, die im Deutschen unnatürlich oder schwer verständlich wirken.
+
+> **Hinweis:** Etablierte Fachbegriffe nicht aufbrechen, auch wenn sie lang sind. „Authentifizierungstoken", „Echtzeit-Datenverarbeitung" – das sind normale deutsche Komposita.
 
 **Vorher:**
 > Die Echtzeit-Datenverarbeitungs-Kapazitäts-Optimierungs-Algorithmus-Implementierung wurde erfolgreich abgeschlossen.
@@ -302,7 +370,7 @@ Deutsch neigt zu nominalisierten Konstruktionen wie „die Durchführung der Unt
 **Nachher:**
 > Wir haben den Algorithmus für die Echtzeit-Datenverarbeitung optimiert.
 
-**Richtlinie:** Komposita sind natürlich im Deutschen, aber nur, wenn sie verständlich bleiben. Wenn ein zusammengesetztes Wort mehr als drei Bestandteile hat oder ein Leser beim ersten Mal pausieren muss, ist es zu lang.
+**Richtlinie:** Komposita sind natürlich im Deutschen, aber nur, wenn sie verständlich bleiben. Wenn ein zusammengesetztes Wort mehr als drei Bestandteile hat und kein etablierter Fachbegriff ist, ist es wahrscheinlich zu lang.
 
 ### 16. Anglizismen-Handling
 
@@ -472,21 +540,23 @@ Deutsch neigt zu nominalisierten Konstruktionen wie „die Durchführung der Unt
 
 ## PROZESS
 
-1. Lese den Eingabetext sorgfältig
-2. Identifiziere alle Instanzen der oben genannten Muster
-3. Überarbeite jeden problematischen Abschnitt
-4. Stelle sicher, dass der überarbeitete Text:
+1. **Texttyp bestimmen:** Sachlich/fachlich, persönlich/meinungsbasiert oder Mischform? Dies bestimmt, welche Regeln mit welcher Intensität gelten.
+2. Lese den Eingabetext sorgfältig
+3. Identifiziere alle Instanzen der oben genannten Muster
+4. Überarbeite jeden problematischen Abschnitt – **prüfe nach jeder Umformulierung:** Sind alle Informationen des Originals noch enthalten? Wenn nein, ist die Überarbeitung falsch.
+5. Stelle sicher, dass der überarbeitete Text:
     - Natürlich klingt, wenn man ihn laut vorliest
     - Natürlich variable Satzstrukturen verwendet
     - Spezifische Details statt vager Behauptungen verwendet
     - Den angemessenen Ton für den Kontext beibehält
-    - Konsistent in der Formalidät ist (Sie/Du durchgehend)
+    - Konsistent in der Formalität ist (Sie/Du durchgehend)
     - Einfache Konstruktionen (ist/sind/hat) verwendet, wo angemessen
-5. Präsentiere einen Entwurf der humanisierten Version
-6. Frage: „Was macht den folgenden Text so offensichtlich KI-generiert?"
-7. Beantworte kurz die verbleibenden Hinweise (falls vorhanden)
-8. Frage: „Jetzt mache ihn nicht mehr offensichtlich KI-generiert."
-9. Präsentiere die finale Version (überarbeitet nach dem Audit)
+    - **Alle Sachinformationen des Originals vollständig bewahrt**
+6. Präsentiere einen Entwurf der humanisierten Version
+7. Frage: „Was macht den folgenden Text so offensichtlich KI-generiert?"
+8. Beantworte kurz die verbleibenden Hinweise (falls vorhanden)
+9. Frage: „Jetzt mache ihn nicht mehr offensichtlich KI-generiert."
+10. Präsentiere die finale Version (überarbeitet nach dem Audit)
 
 ## Ausgabeformat
 
@@ -547,5 +617,5 @@ Biete an:
 - Entfernt Kopula-Vermeidung („fungiert als", „dient als")
 - Entfernt Füllphrasen und Absicherungen
 - Entfernt generische positive Schlussfolgerung („Zusammenfassend lässt sich sagen...", „Die Zukunft sieht rosig aus")
-- Konsistente Formalidät (Du-Form im lockeren, ich-Perspektive-Stil)
+- Konsistente Formalität (Du-Form im lockeren, ich-Perspektive-Stil)
 - Die Stimme persönlicher und weniger „zusammengesetzt" gemacht

@@ -3,14 +3,17 @@ name: skill-builder
 description: helps to create or update a SKILL.md file based on an input document
 ---
 
-Your job is to build or update an agent SKILL.md file.
+Your job is to build or update an agent SKILL.md file:
 
 1. Ask the user to provide a file reference of the source file/folder (normally some kind of documentation written for humans) if not already provided.
-2. If there is a .skill.md on the same directory level as the source read it, as it contains specific instructions that are important for the skills creation.
-3. If the .skill.md contains distinct instructions that the skill file is located in a different directory than the source documentation, follow the instructions to the new directory. Resume from Step 2 in that directory (there may be another .skill.md file in the new directory).
-4. Check, if on the same directory level of the source there is already a SKILL.md
-5. If there is a SKILL.md file assume you are updating that skill with changes from the source.
-6. Use the source to either update the existing SKILL.md or write a new one from scratch, if available the .skill.md is always of utmost importance, even if it contradicts the tutorial of step 5.
+2. Is the provided file named "SKILL.md"?
+    1. If yes, assume this is the file you should edit. In this case it is probably not the source file, but the file you should update based on the source file. Check if there is a .skill.md file in the same directory that points you to the source file. If there is, read it and use it as the source file. If there isn't, ask the user to provide the source file.
+    2. If no, assume the file is the source file
+3. If there is a .skill.md on the same directory level as the source read it, as it contains specific instructions that are important for the skills creation.
+4. If the .skill.md contains distinct instructions that the skill file is located in a different directory than the source documentation, follow the instructions to the new directory. Resume from Step 3 in that directory (there may be another .skill.md file in the new directory).
+5. Check, if on the same directory level of the source there is already a SKILL.md
+6. If there is a SKILL.md file assume you are updating that skill with changes from the source.
+7. Use the source to either update the existing SKILL.md or write a new one from scratch, if available the .skill.md is always of utmost importance.
 
 ## BE CONCISE
 
@@ -39,6 +42,14 @@ When writing a SKILL.md, follow these additional rules:
 - **No extraneous files**: do NOT create README.md, CHANGELOG.md, QUICK_REFERENCE.md or similar alongside the skill. Only SKILL.md and its functional resources.
 - **References stay shallow**: all reference files must link directly from SKILL.md — never nest references inside other references.
 - **TOC for long reference files**: any reference file over 100 lines should start with a table of contents.
+
+## When to Split Files
+
+Split into separate files when:
+
+- SKILL.md exceeds the desired line length
+- Content has distinct domains (finance vs sales schemas)
+- Advanced features are rarely needed
 
 ## Scripts in skills
 
@@ -84,3 +95,12 @@ Agents run in non-interactive shells. Scripts must never block on TTY prompts.
 - **Dry-run flag**: for destructive/stateful ops, add `--dry-run`.
 - **Exit codes**: use distinct codes for different failure types; document them in `--help`.
 - **Predictable output size**: default to summary/limit; add `--offset` or `--output` for large output.
+
+## Review checklist
+
+- [ ] Description includes triggers ("Use when...")
+- [ ] SKILL.md under desired line length
+- [ ] No time-sensitive info
+- [ ] Consistent terminology
+- [ ] Concrete examples included
+- [ ] References one level deep
