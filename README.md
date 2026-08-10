@@ -14,19 +14,19 @@ You can install the skills by running:
 
 - [humanizer](skills/humanizer/SKILL.md) — Remove signs of AI-generated writing from English text. Detects and fixes patterns such as inflated symbolism, em dash overuse, AI vocabulary words, and filler phrases.
 - [humanizer-de](skills/humanizer-de/SKILL.md) — Same as `humanizer`, but tuned for German text.
-- [phpunit](skills/phpunit/SKILL.md) — Comprehensive PHP testing with PHPUnit covering assertions, data providers, mocking, test doubles, database testing, and HTTP testing.
 - [skill-builder](skills/skill-builder/README.md) — Helps create or update a `SKILL.md` file based on an input document.
-- [react-tailwind-to-svelte](skills/react-tailwind-to-svelte/SKILL.md) — Convert React + Tailwind components to Svelte 5 + vanilla CSS. Covers JSX → Svelte syntax, Tailwind class extraction, and CSS structuring. Requires the `tailwind-to-css`, `svelte`, and `tailwind-to-css` skills.
 
 ### Frontend
 
 - [svelte](skills/svelte/SKILL.md) — Svelte 5 + TypeScript component patterns, store architecture, CSS cascade-layer styling, and utility conventions.
 - [svelte-shadcn-primitives](skills/svelte-shadcn-primitives/SKILL.md) — Build primitive UI components (buttons, inputs, dialogs, etc.) in Svelte 5 following shadcn-svelte patterns without Tailwind CSS. Requires the `svelte` and `tailwind-to-css` skills.
 - [tailwind-to-css](skills/tailwind-to-css/SKILL.md) — Convert Tailwind utility classes to vanilla CSS using the local converter script.
+- [react-tailwind-to-svelte](skills/react-tailwind-to-svelte/SKILL.md) — Convert React + Tailwind components to Svelte 5 + vanilla CSS. Covers JSX → Svelte syntax, Tailwind class extraction, and CSS structuring. Requires the `tailwind-to-css`, `svelte`, and `tailwind-to-css` skills.
 
 ### Backend
 
 - [laravel](skills/laravel/SKILL.md) — Laravel coding standards and architecture patterns: lightweight DDD, layer responsibilities, dependency injection, and PHP best practices.
+- [phpunit](skills/phpunit/SKILL.md) — Comprehensive PHP testing with PHPUnit covering assertions, data providers, mocking, test doubles, database testing, and HTTP testing.
 
 ### HAWKI-specific
 

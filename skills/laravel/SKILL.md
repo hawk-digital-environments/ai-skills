@@ -305,7 +305,7 @@ readonly class OrderService
 
 **Service locator in API Resources** — an anti-pattern, but sometimes unavoidable: Laravel instantiates API Resources outside the container, making constructor injection impossible. In these cases, use a service locator helper (e.g. a trait wrapping `app()`) as a last resort. Never apply this pattern in models or anywhere constructor injection is available.
 
-### Configuration
+### ConfigurationAspect
 
 Never call `env()` in application code — it returns `null` when config cache is active.
 

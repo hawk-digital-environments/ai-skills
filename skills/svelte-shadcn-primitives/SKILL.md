@@ -25,14 +25,14 @@ shadcn-svelte components use Tailwind utilities for styling. When porting a comp
 
 ## Key adaptations from shadcn-svelte
 
-| shadcn-svelte                  | Tailwind-free                                      |
-|--------------------------------|----------------------------------------------------|
-| `tailwind-variants` (`tv`)     | `class-variance-authority` (`cva`)                 |
-| `cn()` (clsx + tailwind-merge) | Project's class-merging utility                    |
-| Tailwind classes in template   | Scoped `<style>` with CSS custom properties        |
-| `WithElementRef` type          | `HTMLAttributes<Element>` from `svelte/elements`   |
-| `data-slot="name"`             | Keep — useful for parent selectors                 |
-| `bits-ui` primitives           | Keep — use for accessibility                       |
+| shadcn-svelte                  | Tailwind-free                                    |
+|--------------------------------|--------------------------------------------------|
+| `tailwind-variants` (`tv`)     | `class-variance-authority` (`cva`)               |
+| `cn()` (clsx + tailwind-merge) | Project's class-merging utility                  |
+| Tailwind classes in template   | Scoped `<style>` with CSS custom properties      |
+| `WithElementRef` type          | `HTMLAttributes<Element>` from `svelte/elements` |
+| `data-slot="name"`             | Keep — useful for parent selectors               |
+| `bits-ui` primitives           | Keep — use for accessibility                     |
 
 **Why `cva` over `tailwind-variants`?** `tailwind-variants` is optimized for Tailwind class strings (deduplication, responsive). With vanilla CSS class names there's no conflict risk, so `cva` is sufficient and has no Tailwind dependency.
 
@@ -42,7 +42,7 @@ UI primitives live in `$lib/components/ui/` and follow this structure:
 
 ```svelte
 <script module lang="ts">
-    // Module-level: variant definitions, exported types
+    // ChatModule-level: variant definitions, exported types
     import {cva, type VariantProps} from 'class-variance-authority';
 
     const myVariants = cva('base-class', {

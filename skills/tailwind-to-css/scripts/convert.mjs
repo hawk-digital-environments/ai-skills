@@ -9,7 +9,7 @@
  */
 
 import { execSync } from 'node:child_process';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -29,6 +29,17 @@ function ensureDeps() {
     if (!existsSync(join(DIR, 'node_modules'))) {
         process.stderr.write('Installing dependencies...\n');
         execSync('npm install', { cwd: DIR, stdio: 'inherit' });
+    }
+}
+
+// Wipe the work directory before each run so stale conversion configs
+// (tailwind.conversion.config.js) or leftover build artefacts from a
+// previous run can never affect the current one.
+function cleanWorkDir() {
+    if (!existsSync(WORK_DIR)) return;
+    for (const entry of readdirSync(WORK_DIR)) {
+        if (entry === '.gitignore') continue;
+        rmSync(join(WORK_DIR, entry), { recursive: true, force: true });
     }
 }
 
@@ -320,6 +331,8 @@ export async function tailwindToCss(classDefinitions, overrideFile = null) {
         spacingTokens(),
         fontWeightTokens(),
     ]).process(resolved.css, { from: undefined });
+
+    cleanWorkDir();
 
     return result.css;
 }

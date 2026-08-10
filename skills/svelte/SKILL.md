@@ -25,6 +25,7 @@ src/
 ```
 
 **Role rules:**
+
 - `snippets/` — thin shells; delegate rendering to `components/`, pull state from `stores/`
 - `components/` — no knowledge of which snippet uses them
 - `components/ui/` — zero business logic, zero app-state dependencies; composed by higher-level components
@@ -61,6 +62,8 @@ Every component needs a `@component` block before `<script>` and JSDoc on every 
 
 `Props` always extends the matching `HTMLAttributes<T>` — never redeclare `class`, `id`, `aria-*`.
 
+**IMPORTANT** When writing docblocks for svelte components, do not nest html comments inside each other: `<!-- <!-- nested comment --> -->` is invalid, so is the use of `/* */` inside of documentation blocks, and will break the compiler. Use `// ...` for nested comments instead.
+
 ### Conflicting Attribute Types
 
 When a prop collides with an existing HTML attribute signature, widen in an intermediate interface first:
@@ -96,6 +99,7 @@ export class MyStore {
     public count = $state(0);
     public doubled = $derived(this.count * 2);
 }
+
 export const myStore = new MyStore();
 ```
 
@@ -107,15 +111,64 @@ import {myStore} from '../stores/MyStore.svelte.js';
 
 ---
 
+## Class & Interface Documentation
+
+For `.svelte.ts` stores, `.ts` classes, and interfaces, **documentation priority is on the members** (methods, properties, fields), not the class. Keep documentation as close to the code it describes as possible.
+
+### Priority rules
+
+1. **Method/property doc-blocks come first.** Every public method and non-obvious property gets its own `/** */` JSDoc directly above the declaration — parameters, return values, side effects, and concrete examples for non-obvious behaviour.
+2. **The class-level doc-block explains the system, not the methods.** Use it to describe WHAT the class is, WHEN to use it, WHY it exists, and how it fits the surrounding architecture (which extension owns it, what pattern it implements, how collaborators reach it). Do **not** re-document methods or properties in the class block — that duplicates the member doc-blocks and drifts.
+3. **Interfaces document the contract, not the implementers.** The interface doc-block explains the role the contract plays in the composition (who implements it, who consumes it, what pattern it serves); each member gets its own doc-block describing what the implementer must provide.
+
+### Example
+
+```ts
+/**
+ * Composer slice that owns the currently selected AI model.
+ *
+ * Holds the single source of truth for "which model will receive the next
+ * message" and exposes derived shorthands for the model's capability flags so
+ * UI elements can hide themselves without each re-reading the model settings.
+ * Implements `CheckpointingInterface` so a mode can snapshot and restore the
+ * selected model.
+ */
+export class ModelSlice implements CheckpointingInterface<ModelSliceCheckpoint> {
+    /** The currently selected AI model. */
+    public get current(): AiModel {
+        return this._current;
+    }
+
+    /**
+     * Selects the active model. Accepts an `AiModel` object, a `model_id`
+     * string, a numeric id, or `null` to fall back to the default system model.
+     *
+     * When switching models, existing sampling parameters are preserved only if
+     * the user had already customised them; otherwise they reset to the new
+     * model's defaults.
+     */
+    public set(model: AiModel | string | number | null): void { /* ... */
+    }
+}
+```
+
+### Anti-patterns to avoid
+
+- **Do not** list every method in the class block ("has `set()`, `get()`, `reset()`…") — the members already document themselves.
+- **Do not** document a method only in the class block and leave the method itself undocumented — readers scan from the code up, not from the class down.
+- **Do not** write a class block that's just a reworded restatement of the class name — if there's no architectural context to add, it is fine to skip the class block entirely and let the members document themselves.
+
+---
+
 ## Prop Merging (`mergeProps`)
 
 Standard way to forward rest-props onto a root element while preserving component defaults:
 
-| Key type | Merge behaviour |
-|---|---|
-| `on*` handlers | Both called in sequence — neither overwrites |
-| `class` | Accumulated into array; falsy entries filtered |
-| Everything else | Last value wins |
+| Key type        | Merge behaviour                                |
+|-----------------|------------------------------------------------|
+| `on*` handlers  | Both called in sequence — neither overwrites   |
+| `class`         | Accumulated into array; falsy entries filtered |
+| Everything else | Last value wins                                |
 
 ```svelte
 <div {...mergeProps(
@@ -132,6 +185,7 @@ For ad-hoc class merging without a full `mergeProps` call, use `cx` (re-exported
 
 ```ts
 import {cx} from 'class-variance-authority';
+
 const cls = cx('base', isActive && 'active', className);
 ```
 
@@ -196,11 +250,13 @@ Use `Context` from the `runed` package instead of Svelte's built-in `setContext/
 ```ts
 // RadioCardContext.ts
 import {Context} from 'runed';
+
 interface RadioCardContext {
-    getValue:   () => string;
-    setValue:   (v: string) => void;
+    getValue: () => string;
+    setValue: (v: string) => void;
     isDisabled: () => boolean;
 }
+
 export const radioCardContext = new Context<RadioCardContext>('radio-card');
 ```
 
@@ -273,14 +329,14 @@ Design tokens live in a `tokens/` directory as CSS custom properties, available 
 
 ### Token Reference
 
-| Group | Examples |
-|---|---|
-| Colors | `--color-bg`, `--color-surface`, `--color-text`, `--color-text-muted`, `--color-interactive`, `--color-border` |
-| Typography | `--font-size-xs` → `--font-size-2xl`, `--font-weight-medium`, `--line-height-normal` |
-| Spacing | `--space-1` (4 px) → `--space-16` (64 px) |
-| Radius | `--corner-sm`, `--corner-md`, `--corner-lg`, `--corner-full` |
-| Shadows | `--elevation-none`, `--elevation-1`, `--elevation-2` |
-| Transitions | `--duration-fast`, `--duration-normal`, `--easing-default`, `--easing-spring` |
+| Group       | Examples                                                                                                       |
+|-------------|----------------------------------------------------------------------------------------------------------------|
+| Colors      | `--color-bg`, `--color-surface`, `--color-text`, `--color-text-muted`, `--color-interactive`, `--color-border` |
+| Typography  | `--font-size-xs` → `--font-size-2xl`, `--font-weight-medium`, `--line-height-normal`                           |
+| Spacing     | `--space-1` (4 px) → `--space-16` (64 px)                                                                      |
+| Radius      | `--corner-sm`, `--corner-md`, `--corner-lg`, `--corner-full`                                                   |
+| Shadows     | `--elevation-none`, `--elevation-1`, `--elevation-2`                                                           |
+| Transitions | `--duration-fast`, `--duration-normal`, `--easing-default`, `--easing-spring`                                  |
 
 Dark mode via `[data-theme="dark"]` on `<html>` — color tokens update automatically. **Components need zero dark-mode rules.**
 
@@ -288,20 +344,29 @@ Dark mode via `[data-theme="dark"]` on `<html>` — color tokens update automati
 
 Processed by `postcss-custom-media`, globally available in all CSS files including Svelte `<style>` blocks:
 
-| Range | Min | Max |
-|---|---|---|
-| `xxs` | 0 | 300 px |
-| `xs` | 0 | 549 px |
-| `sm` | 550 px | 767 px |
-| `md` | 768 px | 991 px |
-| `lg` | 992 px | 1199 px |
-| `xl` | 1200 px | — |
+| Range | Min     | Max     |
+|-------|---------|---------|
+| `xxs` | 0       | 300 px  |
+| `xs`  | 0       | 549 px  |
+| `sm`  | 550 px  | 767 px  |
+| `md`  | 768 px  | 991 px  |
+| `lg`  | 992 px  | 1199 px |
+| `xl`  | 1200 px | —       |
 
 Query patterns: `--bp-{range}`, `--bp-{range}-and-smaller`, `--bp-{range}-and-bigger`, `--bp-smaller-than-{range}`, `--bp-bigger-than-{range}`, `--bp-mode-mobile` (≤ 850 px), `--bp-mode-desktop` (≥ 851 px).
 
 ```css
-@media (--bp-md-and-bigger) { .sidebar { display: flex; } }
-@media (--bp-sm-and-smaller) { .nav { flex-direction: column; } }
+@media (--bp-md-and-bigger) {
+    .sidebar {
+        display: flex;
+    }
+}
+
+@media (--bp-sm-and-smaller) {
+    .nav {
+        flex-direction: column;
+    }
+}
 ```
 
 ### Component Style Pattern

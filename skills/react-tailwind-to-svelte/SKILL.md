@@ -1,6 +1,6 @@
 ---
 name: react-tailwind-to-svelte
-description: [ REQUIRES "svelte", "svelte-shadcn-primitives" and "tailwind-to-css" skills! ] Convert React/TypeScript components with shadcn/ui and Tailwind CSS to Svelte 5 components with bits-ui and scoped CSS. Use when migrating React components, porting shadcn/ui components to Svelte, or converting TSX files to .svelte files.
+description: "[ REQUIRES 'svelte', 'svelte-shadcn-primitives' and 'tailwind-to-css' skills! ] Convert React/TypeScript components with shadcn/ui and Tailwind CSS to Svelte 5 components with bits-ui and scoped CSS. Use when migrating React components, porting shadcn/ui components to Svelte, or converting TSX files to .svelte files."
 ---
 
 ## Prerequisites
@@ -12,6 +12,16 @@ This skill depends on three other skills. **Before starting any conversion**, ve
 3. **`tailwind-to-css`** — Tailwind utility class to vanilla CSS conversion
 
 If any skill is missing, **stop and tell the user** to enable it. Do not attempt conversion without all three.
+
+### Runtime dependencies
+
+Before converting, verify these npm packages are installed in the project. If any are missing, install them (ask the user for confirmation first):
+
+- **`bits-ui`** — headless accessible primitives (Dialog, Popover, Select, etc.)
+- **`class-variance-authority`** — variant-to-class mapping (`cva`, `cx`)
+- **`lucide-svelte`** — icon library (replaces `lucide-react`)
+
+Check with `npm ls <package>` or look in `package.json`. Do not fall back to native HTML elements because a package is missing — tell the user to install the required packages.
 
 ## When to use
 
@@ -93,14 +103,31 @@ Read the entire source file. Identify:
 - **Component type**: is this a UI primitive (`components/ui/`) or a business component (`components/`)?
 - **Data vs logic**: does the file contain large data objects that should be extracted into separate `.ts` files?
 
-### Step 2: Look up both APIs
+### Step 2: Inventory and scaffold UI dependencies
+
+List every shadcn/ui component the React source imports (e.g. `Button`, `Dialog`, `Popover`, `Slider`, `Select`). For each one, check whether a corresponding Svelte wrapper already exists in `components/ui/<name>/`.
+
+- **If it exists** — import and use it.
+- **If it does not exist** — scaffold it via the shadcn-svelte CLI, then adapt:
+
+```bash
+npx shadcn-svelte@latest add <component>
+```
+
+This generates a working Svelte component with bits-ui wiring and Tailwind classes. After scaffolding, apply the `tailwind-to-css` skill to convert Tailwind classes to scoped CSS, then apply `svelte-shadcn-primitives` conventions. This is far faster and more correct than writing components from scratch.
+
+If the CLI fails or the component isn't available in the registry, fall back to building it manually: fetch the shadcn-svelte docs (`https://shadcn-svelte.com/docs/components/<name>.md`) and bits-ui docs (`https://bits-ui.com/docs/components/<name>/llms.txt`), then build the wrapper in `components/ui/<name>/`.
+
+Never substitute a native HTML element (e.g. `<dialog>`, `<div>` with manual click-outside) for a shadcn/ui component. If the React source uses `<Dialog>`, the Svelte output must use a bits-ui `Dialog` wrapper from `components/ui/dialog/`. Same for Popover, Select, Slider, Sheet, and all other primitives.
+
+### Step 3: Look up both APIs
 
 1. Run `npx shadcn@latest docs <component>` for the React component and fetch the returned URLs
 2. Fetch `https://shadcn-svelte.com/docs/components/<name>.md` for the Svelte equivalent
 
 Compare APIs to understand prop/event/slot differences before converting.
 
-### Step 3: Convert Tailwind classes to CSS
+### Step 4: Convert Tailwind classes to CSS
 
 Collect all Tailwind utility classes from the component. Use the `tailwind-to-css` skill:
 
@@ -111,11 +138,11 @@ Collect all Tailwind utility classes from the component. Use the `tailwind-to-cs
 
 For `cva()` variant definitions: convert each variant's Tailwind string to a CSS class name, then define those classes in `<style>`.
 
-### Step 4: Apply conversion mappings
+### Step 5: Apply conversion mappings
 
 Use the tables below to systematically convert each React pattern to its Svelte equivalent.
 
-### Step 5: Apply skill conventions
+### Step 6: Apply skill conventions
 
 After mechanical conversion, apply the `svelte` and `svelte-shadcn-primitives` skill conventions:
 
