@@ -11,12 +11,16 @@ description: "Write and review code documentation that stays at the architecture
 
 Method-by-method, parameter-by-parameter documentation rots the moment code changes. It duplicates what the type system and docblocks already say, drifts from reality, and teaches the wrong level of abstraction. Docs win when they give the mental model the code cannot give itself: architecture, data flow, rationale, constraints, and where to look next.
 
+## Gather information
+
+Check if there is a `.documentation.md`file in the directory you should put the documentation in. Also check if parents of the the directory have a `.documentation.md` file. If there is, read it and follow its instructions. The information in the `.documentation.md` file is always of utmost importance. It may contain instructions on where to put the documentation, what to include, and what to leave out.
+
 ## Workflow
 
 Before writing, build a plan. Skipping this produces docs that drift from code and miss the point.
 
 0. **Confirm scope if not obvious.** If it is not absolutely clear which directory to document and which source to document from, ask the user before doing anything else. Multiple doc trees, mirrored layouts, or a request that names a topic but not a path all qualify as "not obvious". Do not guess; a wrong starting directory wastes the whole pass.
-1. **Read the docs first.** Current page, sibling pages, any `.skill.md` guidance in the same directory. Note structure, audience, conventions already in use.
+1. **Read the docs first.** Current page, sibling pages, etc. Note structure, audience, conventions already in use.
 2. **Read the source.** Open the classes the page covers. Diff what the docs claim against what the code does.
 3. **Stop on drift.** If the doc says one thing and the code says another, do not silently "fix" the doc to match the code, and do not silently leave the stale claim. Ask the prompter which side is wrong. The code may be the bug; the doc may be the intended design. You cannot tell from inside.
 4. **Plan.** One short list: which pages change, what each gains or loses, which audience each serves. Note anything you intend to cut and why.
